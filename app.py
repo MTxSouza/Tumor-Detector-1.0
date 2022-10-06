@@ -9,7 +9,7 @@ import os
 # dev configs
 BACKGROUND = '#4FD3D3'
 MODEL_NAME = 'model.h5'
-N_IMG = 70
+N_IMG = 3
 IMG_SIZE = (448,448)
 LABEL_MAP = {1:'Saudável', 0:'Tumor detectado'}
 
@@ -28,7 +28,7 @@ if __name__=='__main__':
         RUNNING = False
 
     def next_image():
-        global current_image, current_index, index, image_widget, label_img, pred_img
+        global current_image, current_index, index, image_widget, label_img, pred_img, graph, root
         current_index += 1
         if not current_index <= index.max():
             current_index = 0
@@ -39,8 +39,17 @@ if __name__=='__main__':
         image_widget.config(image=current_image)
         image_widget.image = current_image
 
+        graph.destroy()
+        graph = display_graph(prob[index[current_index]], root)
+        graph.place(
+            relx=0.56,
+            rely=0.235,
+            relwidth=0.435,
+            relheight=0.694
+        )
+
     def prev_image():
-        global current_image, current_index, index, image_widget, pred_img
+        global current_image, current_index, index, image_widget, pred_img, graph, root
         current_index -= 1
         if not current_index >= 0:
             current_index = index.max()
@@ -50,6 +59,15 @@ if __name__=='__main__':
         pred_img.config(text=PRED_LABEL + LABEL_MAP[predict[id]])
         image_widget.config(image=current_image)
         image_widget.image = current_image
+
+        graph.destroy()
+        graph = display_graph(prob[index[current_index]], root)
+        graph.place(
+            relx=0.56,
+            rely=0.235,
+            relwidth=0.435,
+            relheight=0.694
+        )
 
     # project path
     PATH=os.path.dirname(os.path.realpath(__file__))
@@ -70,13 +88,13 @@ if __name__=='__main__':
     current_index = 0
 
     # running inferences
-    predict, SCORE = model.inference(IMAGES, LABELS)
+    predict, prob, SCORE = model.inference(IMAGES, LABELS)
 
     log.log('info', 'Opening interface.')
 
     # main window
     root = tkinter.Tk()
-    root.geometry('1920x1080')
+    root.geometry('1500x900')
     root.resizable(False,False)
     root.title('Tumor Detector - (BRAIN)')
     root.config(background=BACKGROUND)
@@ -92,10 +110,19 @@ if __name__=='__main__':
     )
     image_widget.image = current_image
     image_widget.place(
-        relx=0.01,
+        relx=0.005,
         rely=0.01,
-        relwidth=0.345,
-        relheight=0.65
+        relwidth=0.545,
+        relheight=0.92 #0.65
+    )
+
+    # graph
+    graph = display_graph(prob[index[current_index]], root)
+    graph.place(
+        relx=0.56,
+        rely=0.235,
+        relwidth=0.435,
+        relheight=0.694
     )
 
     # quit button
@@ -107,8 +134,8 @@ if __name__=='__main__':
         background='#BD400A'
     )
     quit_button.place(
-        relx=0.9,
-        rely=0.01,
+        relx=0.906,
+        rely=0.94,
         relwidth=0.09,
         relheight=0.05
     )
@@ -123,8 +150,8 @@ if __name__=='__main__':
         background=BUTTON_COLOR
     )
     next_img_button.place(
-        relx=0.255,
-        rely=0.67,
+        relx=0.451,
+        rely=0.94,
         relwidth=0.1,
         relheight=0.05
     )
@@ -137,8 +164,8 @@ if __name__=='__main__':
         background=BUTTON_COLOR
     )
     prev_img_button.place(
-        relx=0.01,
-        rely=0.67,
+        relx=0.005,
+        rely=0.94,
         relwidth=0.1,
         relheight=0.05
     )
@@ -153,9 +180,9 @@ if __name__=='__main__':
         anchor='w'
     )
     label_img.place(
-        relx=0.36,
+        relx=0.56, #0.36
         rely=0.01,
-        relwidth=0.25,
+        relwidth=0.32,
         relheight=0.05
     )
 
@@ -169,9 +196,9 @@ if __name__=='__main__':
         anchor='w'
     )
     pred_img.place(
-        relx=0.36,
+        relx=0.56, #0.36
         rely=0.06,
-        relwidth=0.25,
+        relwidth=0.32,
         relheight=0.05
     )
 
@@ -182,14 +209,14 @@ if __name__=='__main__':
         highlightbackground='#466A90'
     )
     result_widget.place(
-        relx=0.36,
+        relx=0.56,
         rely=0.12,
-        relwidth=0.25,
-        relheight=0.1 # 0.2
+        relwidth=0.435,
+        relheight=0.1
     )
     class_info = tkinter.Label(
         master=result_widget,
-        text=f'Classes:\t\tTumor\t\tSaudável',
+        text=f'Classes:\t\t\tTumor\t\t\tSaudável',
         font=('Helverica', 12, 'bold'),
         anchor='w'
     )
@@ -201,7 +228,7 @@ if __name__=='__main__':
     )
     precision_info = tkinter.Label(
         master=result_widget,
-        text='Precisão:\t\t{:.1f}%\t\t{:.1f}%'.format(SCORE[0][0]*100, SCORE[0][1]*100),
+        text='Precisão:\t\t\t{:.1f}%\t\t\t{:.1f}%'.format(SCORE[0][0]*100, SCORE[0][1]*100),
         font=('Helverica', 12, 'bold'),
         anchor='w'
     )
@@ -213,7 +240,7 @@ if __name__=='__main__':
     )
     recall_info = tkinter.Label(
         master=result_widget,
-        text='Recall:\t\t{:.1f}%\t\t{:.1f}%'.format(SCORE[1][0]*100, SCORE[1][1]*100),
+        text='Recall:\t\t\t{:.1f}%\t\t\t{:.1f}%'.format(SCORE[1][0]*100, SCORE[1][1]*100),
         font=('Helverica', 12, 'bold'),
         anchor='w'
     )
@@ -225,7 +252,7 @@ if __name__=='__main__':
     )
     support_info = tkinter.Label(
         master=result_widget,
-        text='Support:\t\t{}\t\t{}'.format(SCORE[3][0], SCORE[3][1]),
+        text='Support:\t\t\t{}\t\t\t{}'.format(SCORE[3][0], SCORE[3][1]),
         font=('Helverica', 12, 'bold'),
         anchor='w'
     )

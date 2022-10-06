@@ -1,7 +1,9 @@
 # libraries
 from sklearn.metrics import precision_recall_fscore_support as score
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from PIL import ImageTk, Image
 
+import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
 import logging
@@ -30,11 +32,14 @@ class Net:
     def inference(self, _image, _labels):
         try:
             _results = []
+            _predicts = []
             for img in _image:
-                _results.append(self.__model.predict(np.expand_dims(np.expand_dims(np.asarray(img), -1), 0)).argmax())
+                _pred = self.__model.predict(np.expand_dims(np.expand_dims(np.asarray(img), -1), 0))
+                _results.append(_pred.argmax())
+                _predicts.append(_pred)
         except Exception as e:
             self.__log.log('critical', f'Something went wrong when inference was running. {e}.')
-        return _results, score(_labels, _results)
+        return _results, _predicts, score(_labels, _results)
 
 
 class Logging:
@@ -77,3 +82,12 @@ def next_image(_index:list) -> int:
 
 def load_image(_image, _size):
     return ImageTk.PhotoImage(image=Image.fromarray(_image).resize(size=_size))
+
+def display_graph(_predict, _root):
+    fig, ax = plt.subplots(figsize=(10,10))
+    ax.bar(['Tumor', 'Saudável'], list(_predict[0]))
+    ax.set_title('Confiança do modelo', fontsize=12)
+    ax.set_xlabel('Classes')
+    ax.set_ylabel('Confiança')
+
+    return FigureCanvasTkAgg(fig, master=_root).get_tk_widget()
