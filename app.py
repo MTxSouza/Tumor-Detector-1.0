@@ -9,7 +9,7 @@ import os
 # dev configs
 BACKGROUND = '#4FD3D3'
 MODEL_NAME = 'model.h5'
-N_IMG = 3
+N_IMG = 70
 IMG_SIZE = (448,448)
 LABEL_MAP = {1:'Saudável', 0:'Tumor detectado'}
 
