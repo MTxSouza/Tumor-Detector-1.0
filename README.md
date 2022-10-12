@@ -11,7 +11,7 @@ cd TumorDetector
 ```
 Go to the project folder and install all requirements to run the application.
 
-*It is strongly recommended to create a virtual environment to run the application, to do so, follow the rules below or skip them and go to 'Install' topic.*
+*It is strongly recommended to create a virtual environment to run the application, to do so, follow the rules below or skip them and go to 'Install' topic if you don't want to create an isolated environment for this project.*
 
 ---
 ### Virtual Environment
