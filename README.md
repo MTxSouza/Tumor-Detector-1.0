@@ -2,6 +2,7 @@
 ### Requirements
 - Git
 - Python>=3.8
+- pip
 ---
 First, clone the repository into your computer using the comand below on terminal and go inside of it.
 ```
