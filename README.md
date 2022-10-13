@@ -21,7 +21,7 @@ Go to the project folder and install all requirements to run the application.
 conda create --name tumor_detector python>=3.8
 conda activate tumor_detector
 ```
-#### - Python Env
+##### - Python Env
 *Make sure you have python-env installed in your machine, if you don't you can install using this [link](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/).*
 ```
 python3 -m venv tumor_detector
