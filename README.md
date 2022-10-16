@@ -1,5 +1,4 @@
 # TumorDetector
-[ATTENTION]: *This project has some bugs, i'm working to fix them.*
 ### Requirements
 - Git
 - Python3
