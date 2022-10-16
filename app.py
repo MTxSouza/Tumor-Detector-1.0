@@ -270,5 +270,3 @@ if __name__=='__main__':
         root.update_idletasks()
 
     log.log('info', 'Appication has been stopped.')
-    os.system('clear')
-
