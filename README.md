@@ -41,5 +41,5 @@ pip install -r requirements.txt
 ### Run
 To run the application, run the command below on terminal.
 ```
-python3 app.py
+python3 app.py # or python app.py
 ```
