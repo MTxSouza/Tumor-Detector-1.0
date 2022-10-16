@@ -19,7 +19,7 @@ Go to the project folder and install all requirements to run the application.
 ##### - Conda
 *Make sure you have anaconda installed in your machine, if you don't you can install using this [link](https://www.anaconda.com).*
 ```
-conda create --name tumor_detector
+conda create --name tumor_detector python
 conda activate tumor_detector
 ```
 ##### - Python Env
